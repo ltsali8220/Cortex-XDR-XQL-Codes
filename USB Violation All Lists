@@ -1,0 +1,13 @@
+// this is the code for  usb violations
+
+preset = network_story 
+| bin _time span =12h
+| sort asc  _time 
+| alter app = lowercase(arraystring(action_app_id_transitions,","))
+| filter app contains "dns" //now its filter all the dns related topics
+
+| fields action_local_ip as user_ip,actor_effective_username as user_name, causality_actor_type as Remarks //now gathering all type of end user data
+
+| view graph type = line xaxis = _time yaxis = counter default_limit = `false` seriestitle("counter","DNS Queries") 
+
+
